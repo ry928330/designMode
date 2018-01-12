@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>命令模式</title>
+</head>
+<body>
+	<button id="replay">点击回放</button>
+	<script type="text/javascript">
+		var Ryu = {
+			jump: function() {
+				console.log('jump!');
+			},
+			crouch: function() {
+				console.log('crouch!');
+			},
+			attack: function() {
+				console.log('attack!');
+			},
+			defence: function() {
+				console.log('defence!');
+			}
+		}
+
+		//W, S, A, D
+		var commonds = {
+			"119": 'jump',
+			"115": 'crouch',
+			"97": 'defence',
+			"100": 'attack'
+		}
+		var commondsRecord = [];
+
+		var makeCommond = function(render, value) {
+			return function() {
+				return render[value]();
+			}
+		}
+
+		document.onkeypress = function(ev) {
+			var keycode = ev.keyCode;
+			var commond = makeCommond(Ryu, commonds[keycode]);
+
+			if(commond) {
+				commond();
+				commondsRecord.push(commond);
+			}
+		}
+
+		document.getElementById('replay').onclick = function() {
+			var commond;
+			while(commond = commondsRecord.shift()) {
+				commond();
+			}
+		}
+	</script>
+</body>
+</html>

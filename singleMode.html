@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Single Mode Test</title>
+</head>
+<body>
+    <button id="loginButton">点击弹出悬浮窗</button>
+    <button id="loginButton2">点击弹出悬浮窗</button>
+    <script>
+        // var createButton = (function(){
+        //     var div;
+        //     return function() {
+        //         if (!div) {
+        //             div = document.createElement('div');
+        //             div.innerHTML = '我是登录悬浮窗';
+        //             div.style.display = 'none';
+        //             document.body.appendChild(div);
+        //             return div;
+        //         }
+        //         return div;
+        //     }
+        // })()
+        // document.getElementById('loginButton').onclick = function() {
+        //     var loginLayer = createButton();
+        //     loginLayer.style.display = 'block';
+
+        // }
+
+        // var myApp = {};
+        // myApp.namespace = function(name) {
+        //     var parts = name.split('.');
+        //     var current = myApp;
+        //     for (var i in parts) {
+        //         if(!current[parts[i]]) {
+        //             current[parts[i]] = {};
+        //         }
+        //         current = current[parts[i]];
+        //     }
+        // }
+        // myApp.namespace('event');
+        // myApp.namespace('dom.style');
+        // myApp.namespace('dom.style');
+
+        // console.log(myApp);
+
+        var getSingle = function(fn) {
+            var result;
+            console.log('result', result);
+            return function() {
+                return result || (result = fn.apply(this, arguments));
+            }
+        }
+
+        var createButton = function() {
+            var div = document.createElement('div');
+            div.innerHTML = "我是登录悬浮窗";
+            div.style.display = 'none';
+            document.body.appendChild(div);
+            return div;
+        }
+        var createSingleIframe = function() {
+            var iframe = document.createElement('iframe');
+            document.body.appendChild(iframe);
+            return iframe;
+        }
+        var createSingleLoginLayer = getSingle(createButton);
+        document.getElementById('loginButton').onclick = function() {
+            var loginLayer = createSingleLoginLayer();
+            loginLayer.style.display = 'block';
+        }
+        var createSingleIframeLayer = getSingle(createSingleIframe);
+        document.getElementById('loginButton2').onclick = function() {
+            var iframeLayer = createSingleIframeLayer();
+            iframeLayer.style.display = "block";
+        }
+
+    </script>
+</body>
+</html>

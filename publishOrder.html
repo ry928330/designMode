@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>发布订阅模式</title>
+	<style type="text/css">
+		#header {
+			width: 100px;
+			height: 100px;
+			border: 1px solid red;
+		}
+		#footer {
+			width: 100px;
+			height: 100px;
+			border: 1px solid black;
+		}
+	</style>
+</head>
+<body>
+	<button onclick="render()">页面渲染</button>
+	<div id="header"></div>
+	<div id="footer"></div>
+	<script type="text/javascript" src="./jquery-3.2.1.min.js"></script>
+	<script type="text/javascript">
+		var login = {
+			clientList: [],
+			listen: function(key, fn) {
+				var self = this;
+				if (!self.clientList[key]) {
+					self.clientList[key] = []
+				}
+				self.clientList[key].push(fn);
+			},
+			trigger: function() {
+
+				var self = this;
+				var key = Array.prototype.shift.call(arguments), 
+					fns = self.clientList[key];
+				if(!fns || fns.length ==0) {
+					return false;
+				}
+
+				for (var i=0, len=fns.length; i<len; i++) {
+					var fn = fns[i];
+					fn.apply(self, arguments);
+				}
+			}
+		}
+		var header = (function(){
+			login.listen('loginSuccess', function(data) {
+				header.setHeader(data)
+			});
+			return {
+				setHeader: function(data) {
+					var div = document.getElementById('header');
+					div.innerHTML = data + 'set header';
+				}
+			}
+		})()
+		var footer = (function(){
+			login.listen('loginSuccess', function(data) {
+				footer.setFooter(data);
+			});
+			return {
+				setFooter: function(data) {
+					var div = document.getElementById('footer');
+					div.innerHTML = data + 'set footer';
+				}
+			}
+		})();
+		function render() {
+			$.ajax({
+				url: 'http://10.2.48.21:8088',
+				type: 'POST',
+				success: function(data) {
+					login.trigger('loginSuccess', data);
+				}
+			})
+		}
+	</script>
+</body>
+</html>

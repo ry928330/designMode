@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>策略模式之表单验证</title>
+</head>
+<body>
+    <form action="" id="registerForm" method="post">
+        请输入用户名: <input type="text" name="userName" />
+        请输入密码: <input type="text" name="password" />
+        请输入手机号: <input type="text" name="phoneNumber" />
+        <button></button>
+    </form> 
+
+    <script>
+        var strategies = {
+            isEmpty: function(value, error){
+                if (value == '') {
+                    return error;
+                }
+            },
+            minLength: function(value, length, error) {
+                if (value.length < length) {
+                    return error;
+                }
+            },
+            isMobile: function(value, error) {
+                if (!/^1[|3|5|8][0-9]{9}$/.test(value)) {
+                    return error;
+                }
+            }
+        }
+        var registerForm = document.getElementById('registerForm');
+
+        var validataFunc = function() {
+            var validator = new Validator();
+            validator.add(registerForm.userName, 'isEmpty')
+        }
+    </script>
+</body>
+</html>
